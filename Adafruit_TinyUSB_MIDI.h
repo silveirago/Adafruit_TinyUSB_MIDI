@@ -4,9 +4,9 @@
 #include <Adafruit_TinyUSB.h>
 
 // MIDI class definition for sending MIDI messages
-class Adafruit_TinyUSB_MIDI_Class {
+class Adafruit_TinyUSB_MIDI {
 public:
-    Adafruit_TinyUSB_MIDI_Class(uint8_t n_cables = 1);  // Constructor
+    Adafruit_TinyUSB_MIDI(uint8_t n_cables = 1);  // Constructor
 
     bool begin();  // Initialize MIDI interface
 
@@ -34,7 +34,7 @@ private:
     Adafruit_USBD_MIDI _midi;
 };
 
-extern Adafruit_TinyUSB_MIDI_Class MIDI;  // Global MIDI instance
+extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance
 
 // MIDI Input class definition for receiving MIDI messages
 class Adafruit_TinyUSB_MIDI_Input {

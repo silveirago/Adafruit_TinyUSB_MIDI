@@ -2,6 +2,8 @@
 
 The `Adafruit_TinyUSB_MIDI` library is an Arduino-compatible library that simplifies sending MIDI messages over USB using the Adafruit TinyUSB stack. This library allows you to easily send various MIDI messages such as Note On/Off, Control Change, Program Change, Pitch Bend, and more.
 
+by Gustavo Silveira | Nerd Musician
+
 ## Features
 
 - **Send MIDI Note On/Off**: Play and stop notes on a connected MIDI device.
@@ -22,34 +24,9 @@ The `Adafruit_TinyUSB_MIDI` library is an Arduino-compatible library that simpli
       - macOS/Linux: `~/Documents/Arduino/libraries/`
 4. **Restart the Arduino IDE**: Restart your Arduino IDE to recognize the new library.
 
-## Usage
 
-### Basic Example
+## Learn how to build your MIDI controllers
 
-```cpp
-#include <Adafruit_TinyUSB_MIDI.h>
-
-void setup() {
-  // Initialize MIDI communication
-  MIDI.begin();
-}
-
-int delayTime = 200;
-
-void loop() {
-  // Send MIDI notes from C2 to B2
-  for (int i = 36; i < 48; i++) {
-    MIDI.sendNoteOn(i, 127, 1);  // note, velocity, channel
-    delay(delayTime);
-    MIDI.sendNoteOn(i, 0, 1);    // note, velocity, channel (Note Off)
-    delay(delayTime);
-  }
-
-  // Send Control Change messages
-  for (int i = 1; i < 128; i++) {
-    MIDI.sendControlChange(10, i, 10);  // cc number, cc value, channel
-    delay(50);
-  }
-
-  // Additional MIDI messages can be sent similarly...
-}
+- [Nerd Musician Pro (all the courses)](https://go.musiconerd.com/nerd-musician-pro)
+- [DIY MIDI Controller Workshop (free course)](https://go.musiconerd.com/diy-midi-controller-workshop)
+- [Fazendo Música com Arduino (Português)](https://go.musiconerd.com/fazendo-musica-com-arduino)
