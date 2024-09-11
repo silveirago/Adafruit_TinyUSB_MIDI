@@ -4,6 +4,10 @@ The `Adafruit_TinyUSB_MIDI` library is an Arduino-compatible library that simpli
 
 by Gustavo Silveira | Nerd Musician
 
+## Watch the full tutorial
+
+[Make a MIDI Controller with the Raspberry Pi Pico: a MIDI Fidget Spinner](https://youtu.be/V3-PUsuYGzs)
+
 ## Features
 
 - **Send MIDI Note On/Off**: Play and stop notes on a connected MIDI device.
