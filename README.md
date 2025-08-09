@@ -4,6 +4,28 @@ The `Adafruit_TinyUSB_MIDI` library is an Arduino-compatible library that simpli
 
 by Gustavo Silveira | Nerd Musician
 
+## Project Overview
+
+This repository contains the core library files `Adafruit_TinyUSB_MIDI.h` and `Adafruit_TinyUSB_MIDI.cpp`, input support through the `Adafruit_TinyUSB_MIDI_Input` class, and example sketches in the `Examples/` directory.
+
+### USB-MIDI packets
+
+USB-MIDI messages are transmitted in 32-bit packets that bundle message status and data bytes for efficient USB transfers.
+
+### Callback model
+
+Incoming MIDI events are handled via callbacks, letting your sketch react to messages as they arrive.
+
+### Global vs. local MIDI instances
+
+You can use the provided global `MIDI` object for simple sketches or create local instances to manage multiple MIDI interfaces.
+
+### Next Steps
+
+- Explore the MIDI protocol to understand message structure.
+- Learn more about the TinyUSB stack that enables USB connectivity.
+- Experiment with the example sketches in the `Examples/` folder.
+
 ## Watch the full tutorial
 
 [Make a MIDI Controller with the Raspberry Pi Pico: a MIDI Fidget Spinner](https://youtu.be/V3-PUsuYGzs)
