@@ -239,9 +239,39 @@ void Adafruit_TinyUSB_MIDI_Input::setHandleRealTime(void (*fptr)(uint8_t realTim
 // Function to process incoming MIDI data
 void Adafruit_TinyUSB_MIDI_Input::read() {
     uint8_t data[4];
+    static uint8_t sysexBuffer[256];
+    static size_t sysexLength = 0;
+    static bool inSysEx = false;
+
     while (_midi.available()) {
         if (_midi.readPacket(data)) {
-            parseMessage(data, 4);
+            // Real-time messages can appear at any time, even during SysEx
+            if (data[1] >= 0xF8) {
+                parseMessage(data, 4);
+                continue;
+            }
+
+            if (inSysEx || data[1] == 0xF0) {
+                inSysEx = true;
+                for (int i = 1; i < 4; ++i) {
+                    uint8_t b = data[i];
+                    if (b == 0) {
+                        continue;
+                    }
+                    if (sysexLength < sizeof(sysexBuffer)) {
+                        sysexBuffer[sysexLength++] = b;
+                    }
+                    if (b == 0xF7) {
+                        // End of SysEx message
+                        parseMessage(sysexBuffer, sysexLength);
+                        sysexLength = 0;
+                        inSysEx = false;
+                        break;
+                    }
+                }
+            } else {
+                parseMessage(data, 4);
+            }
         }
     }
 }
@@ -249,6 +279,14 @@ void Adafruit_TinyUSB_MIDI_Input::read() {
 // Function to parse incoming MIDI messages
 // Function to parse incoming MIDI messages
 void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
+    // If buffer starts with 0xF0, it's a full SysEx message
+    if (data[0] == 0xF0) {
+        if (handleSysEx) {
+            handleSysEx(length, data);
+        }
+        return;
+    }
+
     uint8_t statusByte = data[1] & 0xF0;
     uint8_t channel = data[1] & 0x0F;
 
@@ -298,10 +336,8 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
             }
             break;
 
-        case 0xF0: // System Messages
-            if (data[1] == 0xF0 && handleSysEx) { // SysEx
-                handleSysEx(length, data);
-            } else if (data[1] == 0xF8 || data[1] == 0xFA || data[1] == 0xFB || data[1] == 0xFC || data[1] == 0xFE || data[1] == 0xFF) {
+        case 0xF0: // System Messages (non-SysEx)
+            if (data[1] == 0xF8 || data[1] == 0xFA || data[1] == 0xFB || data[1] == 0xFC || data[1] == 0xFE || data[1] == 0xFF) {
                 if (handleRealTime) {
                     handleRealTime(data[1]);
                 }
