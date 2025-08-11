@@ -41,12 +41,8 @@ void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
     _midi.sendSysEx(data, length);
 }
 
-void Adafruit_TinyUSB_MIDI::sendChannelPressure(uint8_t pressure, uint8_t channel) {
+void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t pressure, uint8_t channel) {
     _midi.sendChannelPressure(pressure, channel);
-}
-
-void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel) {
-    _midi.sendAfterTouch(note, pressure, channel);
 }
 
 void Adafruit_TinyUSB_MIDI::sendPolyPressure(uint8_t note, uint8_t pressure, uint8_t channel) {
@@ -116,13 +112,8 @@ void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
     _midi.write(data, length);
 }
 
-void Adafruit_TinyUSB_MIDI::sendChannelPressure(uint8_t pressure, uint8_t channel) {
+void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t pressure, uint8_t channel) {
     uint8_t packet[4] = {static_cast<uint8_t>(0x0D), static_cast<uint8_t>(0xD0 | (channel & 0x0F)), pressure, 0};
-    _midi.writePacket(packet);
-}
-
-void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel) {
-    uint8_t packet[4] = {static_cast<uint8_t>(0x0A), static_cast<uint8_t>(0xA0 | (channel & 0x0F)), note, pressure};
     _midi.writePacket(packet);
 }
 
