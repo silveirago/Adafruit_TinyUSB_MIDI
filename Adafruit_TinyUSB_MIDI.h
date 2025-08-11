@@ -2,8 +2,6 @@
 #define ADAFRUIT_TINYUSB_MIDI_H
 
 #include "IMIDITransport.h"
-#include "TinyUSBTransport.h"
-#include "RenesasUSBTransport.h"
 
 // MIDI class definition for sending MIDI messages
 class Adafruit_TinyUSB_MIDI {

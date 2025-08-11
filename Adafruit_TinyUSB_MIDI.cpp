@@ -1,8 +1,10 @@
 #include "Adafruit_TinyUSB_MIDI.h"
 
 #if defined(ARDUINO_ARCH_RENESAS)
+#include "RenesasUSBTransport.h"
 static RenesasUSBTransport _defaultTransport;
 #else
+#include "TinyUSBTransport.h"
 static TinyUSBTransport _defaultTransport;
 #endif
 
