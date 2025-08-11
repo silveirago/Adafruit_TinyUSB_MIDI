@@ -50,6 +50,26 @@ You can use the provided global `MIDI` object for simple sketches or create loca
       - macOS/Linux: `~/Documents/Arduino/libraries/`
 4. **Restart the Arduino IDE**: Restart your Arduino IDE to recognize the new library.
 
+## Using with UNO R4 / Minima / Nano R4
+
+The Renesas-based UNO R4 family ships with its own USBMIDI implementation.  Install the
+**Arduino UNO R4 Boards** package version **1.0.7 or later** from the Board Manager, then
+select the appropriate board under `Tools → Board`:
+
+* **UNO R4 Minima** – `Arduino UNO R4 Minima`
+* **UNO R4 WiFi** – `Arduino UNO R4 WiFi`
+* **Nano R4** – `Arduino Nano R4`
+
+These boards use the built-in `USBMIDI` class instead of the `Adafruit_USBD_MIDI` object
+shown in the other examples.  Instantiate `USBMIDI` in your sketch and call `MIDI.begin()`
+normally.
+
+After uploading the sketch the board will reboot and enumerate as a class‑compliant
+USB‑MIDI controller.  Check your operating system’s MIDI device list (e.g. **Audio MIDI
+Setup** on macOS or **Device Manager → Sound, video and game controllers** on Windows) to
+verify it appears.  If the device is not listed, press the reset button once to trigger
+USB re‑enumeration.
+
 
 ## Learn how to build your MIDI controllers
 
