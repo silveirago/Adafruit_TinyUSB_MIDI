@@ -299,8 +299,33 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
             break;
 
         case 0xF0: // System Messages
-            if (data[1] == 0xF0 && handleSysEx) { // SysEx
-                handleSysEx(length, data);
+            if (data[1] == 0xF0) { // SysEx start or continuation
+                if (handleSysEx) {
+                    handleSysEx(length, data);
+                }
+            } else if (data[1] == 0xF1) { // MTC Quarter Frame
+                if (handleTimeCodeQuarterFrame) {
+                    uint8_t typeNibble = (data[2] >> 4) & 0x07;
+                    uint8_t valuesNibble = data[2] & 0x0F;
+                    handleTimeCodeQuarterFrame(typeNibble, valuesNibble);
+                }
+            } else if (data[1] == 0xF2) { // Song Position Pointer
+                if (handleSongPosition) {
+                    uint16_t beats = (data[3] << 7) | data[2];
+                    handleSongPosition(beats);
+                }
+            } else if (data[1] == 0xF3) { // Song Select
+                if (handleSongSelect) {
+                    handleSongSelect(data[2]);
+                }
+            } else if (data[1] == 0xF6) { // Tune Request
+                if (handleTuneRequest) {
+                    handleTuneRequest();
+                }
+            } else if (data[1] == 0xF7) { // End of SysEx
+                if (handleSysEx) {
+                    handleSysEx(length, data);
+                }
             } else if (data[1] == 0xF8 || data[1] == 0xFA || data[1] == 0xFB || data[1] == 0xFC || data[1] == 0xFE || data[1] == 0xFF) {
                 if (handleRealTime) {
                     handleRealTime(data[1]);
