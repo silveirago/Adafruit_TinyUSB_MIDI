@@ -364,6 +364,29 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
             }
             break;
 
+        case 0xF0: // System Common Messages
+            if (data[1] == 0xF1) { // MTC Quarter Frame
+                if (handleTimeCodeQuarterFrame) {
+                    uint8_t typeNibble = (data[2] >> 4) & 0x07;
+                    uint8_t valuesNibble = data[2] & 0x0F;
+                    handleTimeCodeQuarterFrame(typeNibble, valuesNibble);
+                }
+            } else if (data[1] == 0xF2) { // Song Position Pointer
+                if (handleSongPosition) {
+                    uint16_t beats = (data[3] << 7) | data[2];
+                    handleSongPosition(beats);
+                }
+            } else if (data[1] == 0xF3) { // Song Select
+                if (handleSongSelect) {
+                    handleSongSelect(data[2]);
+                }
+            } else if (data[1] == 0xF6) { // Tune Request
+                if (handleTuneRequest) {
+                    handleTuneRequest();
+                }
+            }
+            break;
+
         default:
             // Other MIDI message types can be handled here
             break;
