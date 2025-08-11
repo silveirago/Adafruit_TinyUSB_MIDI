@@ -1,14 +1,21 @@
 #ifndef ADAFRUIT_TINYUSB_MIDI_H
 #define ADAFRUIT_TINYUSB_MIDI_H
 
+#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
+#define ADAFRUIT_TINYUSB_MIDI_RENESAS
+#include <USBMIDI.h>
+using TinyUSBMIDI_Device = USBMIDI;
+#else
 #include <Adafruit_TinyUSB.h>
+using TinyUSBMIDI_Device = Adafruit_USBD_MIDI;
+#endif
 
 // MIDI class definition for sending MIDI messages
 class Adafruit_TinyUSB_MIDI {
 public:
-    Adafruit_TinyUSB_MIDI(uint8_t n_cables = 1);  // Constructor
+    Adafruit_TinyUSB_MIDI(uint8_t n_cables = 1);
 
-    bool begin();  // Initialize MIDI interface
+    bool begin();
 
     void sendNoteOn(uint8_t note, uint8_t velocity, uint8_t channel);
     void sendNoteOff(uint8_t note, uint8_t velocity, uint8_t channel);
@@ -28,19 +35,20 @@ public:
     void sendTuneRequest();
     void sendRealTime(uint8_t realTimeType);
 
-    Adafruit_USBD_MIDI& getMidiInstance();  // Expose MIDI instance for input handling
+    TinyUSBMIDI_Device& getMidiInstance();
 
 private:
-    Adafruit_USBD_MIDI _midi;
+    TinyUSBMIDI_Device _midi;
 };
 
 extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance
 
 // MIDI Input class definition for receiving MIDI messages
+#ifndef ADAFRUIT_TINYUSB_MIDI_RENESAS
 class Adafruit_TinyUSB_MIDI_Input {
 public:
     // Constructor
-    Adafruit_TinyUSB_MIDI_Input(Adafruit_USBD_MIDI &midiInstance);
+    Adafruit_TinyUSB_MIDI_Input(TinyUSBMIDI_Device &midiInstance);
 
     // Functions to set callback functions
     void setHandleNoteOn(void (*fptr)(uint8_t channel, uint8_t note, uint8_t velocity));
@@ -63,7 +71,7 @@ public:
 
 private:
     // Reference to MIDI instance
-    Adafruit_USBD_MIDI &_midi;
+    TinyUSBMIDI_Device &_midi;
 
     // Callback function pointers
     void (*handleNoteOn)(uint8_t channel, uint8_t note, uint8_t velocity);
@@ -84,5 +92,6 @@ private:
     // Function to parse incoming MIDI data
     void parseMessage(uint8_t *data, size_t length);
 };
+#endif
 
 #endif // ADAFRUIT_TINYUSB_MIDI_H
