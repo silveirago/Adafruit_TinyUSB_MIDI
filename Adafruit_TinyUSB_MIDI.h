@@ -25,8 +25,7 @@ public:
     void sendPitchBend(int16_t bendValue, uint8_t channel);
 
     void sendSysEx(size_t length, uint8_t *data);
-    void sendChannelPressure(uint8_t pressure, uint8_t channel);
-    void sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel);
+    void sendAfterTouch(uint8_t pressure, uint8_t channel);
     void sendPolyPressure(uint8_t note, uint8_t pressure, uint8_t channel);
 
     void sendTimeCodeQuarterFrame(uint8_t typeNibble, uint8_t valuesNibble);
