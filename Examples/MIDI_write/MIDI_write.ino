@@ -1,12 +1,4 @@
-#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
-// Renesas RA4 boards provide a built-in USBMIDI interface
-#include <USBMIDI.h>
-USBMIDI MIDI;
-#else
 #include <Adafruit_TinyUSB_MIDI.h>
-// Other boards use the Adafruit TinyUSB MIDI driver
-Adafruit_USBD_MIDI MIDI;
-#endif
 
 int delayTime = 30;
 

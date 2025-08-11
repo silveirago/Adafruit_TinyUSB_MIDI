@@ -41,7 +41,7 @@ private:
     TinyUSBMIDI_Device _midi;
 };
 
-extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance
+extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance provided by the library
 
 // MIDI Input class definition for receiving MIDI messages
 #ifndef ADAFRUIT_TINYUSB_MIDI_RENESAS

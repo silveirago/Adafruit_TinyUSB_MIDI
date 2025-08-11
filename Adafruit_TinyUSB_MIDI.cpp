@@ -2,7 +2,7 @@
 #include "Adafruit_TinyUSB_MIDI.h"
 
 // Initialize the global MIDI instance
-//Adafruit_TinyUSB_MIDI MIDI;
+Adafruit_TinyUSB_MIDI MIDI;
 
 #ifdef ADAFRUIT_TINYUSB_MIDI_RENESAS
 
