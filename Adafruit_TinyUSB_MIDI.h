@@ -1,12 +1,14 @@
 #ifndef ADAFRUIT_TINYUSB_MIDI_H
 #define ADAFRUIT_TINYUSB_MIDI_H
 
+#include <Arduino.h>
+
 #if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
 #define ADAFRUIT_TINYUSB_MIDI_RENESAS
-#include <USBMIDI.h>
+class USBMIDI;
 using TinyUSBMIDI_Device = USBMIDI;
 #else
-#include <Adafruit_TinyUSB.h>
+class Adafruit_USBD_MIDI;
 using TinyUSBMIDI_Device = Adafruit_USBD_MIDI;
 #endif
 

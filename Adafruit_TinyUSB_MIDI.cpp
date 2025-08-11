@@ -1,4 +1,9 @@
 // Adafruit TinyUSB MIDI implementation
+#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
+#include <USBMIDI.h>
+#else
+#include <Adafruit_TinyUSB.h>
+#endif
 #include "Adafruit_TinyUSB_MIDI.h"
 
 // Initialize the global MIDI instance
