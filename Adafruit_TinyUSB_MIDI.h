@@ -13,7 +13,9 @@ using TinyUSBMIDI_Device = Adafruit_USBD_MIDI;
 // MIDI class definition for sending MIDI messages
 class Adafruit_TinyUSB_MIDI {
 public:
-    Adafruit_TinyUSB_MIDI(uint8_t n_cables = 1);
+    explicit Adafruit_TinyUSB_MIDI(TinyUSBMIDI_Device &transport);
+
+    static Adafruit_TinyUSB_MIDI makeDefault(uint8_t n_cables = 1);
 
     bool begin();
 
@@ -38,7 +40,7 @@ public:
     TinyUSBMIDI_Device& getMidiInstance();
 
 private:
-    TinyUSBMIDI_Device _midi;
+    TinyUSBMIDI_Device &_midi;
 };
 
 extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance provided by the library
