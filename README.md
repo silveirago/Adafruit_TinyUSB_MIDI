@@ -20,6 +20,31 @@ Incoming MIDI events are handled via callbacks, letting your sketch react to mes
 
 You can use the provided global `MIDI` object for simple sketches or create local instances to manage multiple MIDI interfaces.
 
+### Supplying a custom transport
+
+The library can bind to any `TinyUSBMIDI_Device` transport.  Pass your
+transport instance to the constructor to avoid scattering `#ifdef`
+checks in your sketch:
+
+```cpp
+#include <Adafruit_TinyUSB_MIDI.h>
+#include <Adafruit_TinyUSB.h>
+
+Adafruit_USBD_MIDI usb_midi;      // or USBMIDI on UNO R4 boards
+Adafruit_TinyUSB_MIDI midi(usb_midi);
+
+void setup() {
+  midi.begin();
+}
+```
+
+If you don't need a custom transport, use the built-in factory which
+selects an available transport at runtime:
+
+```cpp
+Adafruit_TinyUSB_MIDI MIDI = Adafruit_TinyUSB_MIDI::makeDefault();
+```
+
 ### Next Steps
 
 - Explore the MIDI protocol to understand message structure.
