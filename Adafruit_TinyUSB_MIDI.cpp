@@ -1,4 +1,9 @@
 // Adafruit TinyUSB MIDI implementation
+#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
+#include <USBMIDI.h>
+#else
+#include <Adafruit_TinyUSB.h>
+#endif
 #include "Adafruit_TinyUSB_MIDI.h"
 
 // Initialize the global MIDI instance
@@ -41,12 +46,8 @@ void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
     _midi.sendSysEx(data, length);
 }
 
-void Adafruit_TinyUSB_MIDI::sendChannelPressure(uint8_t pressure, uint8_t channel) {
+void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t pressure, uint8_t channel) {
     _midi.sendChannelPressure(pressure, channel);
-}
-
-void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel) {
-    _midi.sendAfterTouch(note, pressure, channel);
 }
 
 void Adafruit_TinyUSB_MIDI::sendPolyPressure(uint8_t note, uint8_t pressure, uint8_t channel) {
@@ -116,13 +117,8 @@ void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
     _midi.write(data, length);
 }
 
-void Adafruit_TinyUSB_MIDI::sendChannelPressure(uint8_t pressure, uint8_t channel) {
+void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t pressure, uint8_t channel) {
     uint8_t packet[4] = {static_cast<uint8_t>(0x0D), static_cast<uint8_t>(0xD0 | (channel & 0x0F)), pressure, 0};
-    _midi.writePacket(packet);
-}
-
-void Adafruit_TinyUSB_MIDI::sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel) {
-    uint8_t packet[4] = {static_cast<uint8_t>(0x0A), static_cast<uint8_t>(0xA0 | (channel & 0x0F)), note, pressure};
     _midi.writePacket(packet);
 }
 
@@ -176,6 +172,8 @@ Adafruit_TinyUSB_MIDI_Input::Adafruit_TinyUSB_MIDI_Input(TinyUSBMIDI_Device &mid
     handleSongSelect = nullptr;
     handleTuneRequest = nullptr;
     handleRealTime = nullptr;
+    _sysexLength = 0;
+    _inSysEx = false;
 }
 
 // Implementing the set callback functions
@@ -247,8 +245,62 @@ void Adafruit_TinyUSB_MIDI_Input::read() {
 }
 
 // Function to parse incoming MIDI messages
-// Function to parse incoming MIDI messages
 void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
+    (void)length;
+
+    bool processedSysEx = false;
+
+    // Iterate over the data bytes in the packet
+    for (size_t i = 1; i < 4; ++i) {
+        uint8_t b = data[i];
+        if (b == 0) {
+            continue;
+        }
+
+        // Real-time messages can occur anywhere
+        if (b >= 0xF8) {
+            if (handleRealTime) {
+                handleRealTime(b);
+            }
+            continue;
+        }
+
+        if (_inSysEx) {
+            if (_sysexLength < sizeof(_sysexBuffer)) {
+                _sysexBuffer[_sysexLength++] = b;
+            }
+            if (b == 0xF7) {
+                if (handleSysEx) {
+                    handleSysEx(_sysexLength, _sysexBuffer);
+                }
+                _sysexLength = 0;
+                _inSysEx = false;
+            }
+            processedSysEx = true;
+            continue;
+        }
+
+        if (b == 0xF0) {
+            _inSysEx = true;
+            _sysexLength = 0;
+            if (_sysexLength < sizeof(_sysexBuffer)) {
+                _sysexBuffer[_sysexLength++] = b;
+            }
+            processedSysEx = true;
+            continue;
+        }
+    }
+
+    // If this packet was part of a SysEx message, no further processing is needed
+    if (processedSysEx || _inSysEx) {
+        return;
+    }
+
+    // Ignore real-time messages since they were handled above
+    if (data[1] >= 0xF8) {
+        return;
+    }
+
     uint8_t statusByte = data[1] & 0xF0;
     uint8_t channel = data[1] & 0x0F;
 
@@ -256,7 +308,7 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
         case 0x90: // Note On
             if (handleNoteOn && data[3] > 0) {
                 handleNoteOn(channel, data[2], data[3]);
-            } else if (handleNoteOff && data[3] == 0) { // Treat Note On with 0 velocity as Note Off
+            } else if (handleNoteOff && data[3] == 0) {
                 handleNoteOff(channel, data[2], data[3]);
             }
             break;
@@ -281,7 +333,7 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
 
         case 0xE0: // Pitch Bend
             if (handlePitchBend) {
-                int16_t bendValue = (data[3] << 7) | data[2]; // Combine MSB and LSB
+                int16_t bendValue = (data[3] << 7) | data[2];
                 handlePitchBend(channel, bendValue);
             }
             break;
@@ -298,12 +350,8 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
             }
             break;
 
-        case 0xF0: // System Messages
-            if (data[1] == 0xF0) { // SysEx start or continuation
-                if (handleSysEx) {
-                    handleSysEx(length, data);
-                }
-            } else if (data[1] == 0xF1) { // MTC Quarter Frame
+        case 0xF0: // System Common Messages
+            if (data[1] == 0xF1) { // MTC Quarter Frame
                 if (handleTimeCodeQuarterFrame) {
                     uint8_t typeNibble = (data[2] >> 4) & 0x07;
                     uint8_t valuesNibble = data[2] & 0x0F;
@@ -321,14 +369,6 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
             } else if (data[1] == 0xF6) { // Tune Request
                 if (handleTuneRequest) {
                     handleTuneRequest();
-                }
-            } else if (data[1] == 0xF7) { // End of SysEx
-                if (handleSysEx) {
-                    handleSysEx(length, data);
-                }
-            } else if (data[1] == 0xF8 || data[1] == 0xFA || data[1] == 0xFB || data[1] == 0xFC || data[1] == 0xFE || data[1] == 0xFF) {
-                if (handleRealTime) {
-                    handleRealTime(data[1]);
                 }
             }
             break;

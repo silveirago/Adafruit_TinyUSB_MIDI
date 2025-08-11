@@ -1,12 +1,14 @@
 #ifndef ADAFRUIT_TINYUSB_MIDI_H
 #define ADAFRUIT_TINYUSB_MIDI_H
 
+#include <Arduino.h>
+
 #if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
 #define ADAFRUIT_TINYUSB_MIDI_RENESAS
-#include <USBMIDI.h>
+class USBMIDI;
 using TinyUSBMIDI_Device = USBMIDI;
 #else
-#include <Adafruit_TinyUSB.h>
+class Adafruit_USBD_MIDI;
 using TinyUSBMIDI_Device = Adafruit_USBD_MIDI;
 #endif
 
@@ -25,8 +27,7 @@ public:
     void sendPitchBend(int16_t bendValue, uint8_t channel);
 
     void sendSysEx(size_t length, uint8_t *data);
-    void sendChannelPressure(uint8_t pressure, uint8_t channel);
-    void sendAfterTouch(uint8_t note, uint8_t pressure, uint8_t channel);
+    void sendAfterTouch(uint8_t pressure, uint8_t channel);
     void sendPolyPressure(uint8_t note, uint8_t pressure, uint8_t channel);
 
     void sendTimeCodeQuarterFrame(uint8_t typeNibble, uint8_t valuesNibble);
@@ -88,6 +89,11 @@ private:
     void (*handleSongSelect)(uint8_t songNumber);
     void (*handleTuneRequest)();
     void (*handleRealTime)(uint8_t realTimeType);
+
+    // Buffer for assembling SysEx messages
+    uint8_t _sysexBuffer[256];
+    size_t _sysexLength;
+    bool _inSysEx;
 
     // Function to parse incoming MIDI data
     void parseMessage(uint8_t *data, size_t length);
