@@ -1,7 +1,7 @@
 #include <Adafruit_TinyUSB_MIDI.h>
 
 // Global instance for MIDI Input
-Adafruit_TinyUSB_MIDI_Input MIDI_Input(MIDI.getMidiInstance());
+Adafruit_TinyUSB_MIDI_Input MIDI_Input(MIDI.getTransport());
 
 bool ledState = false;  // Variable to keep track of LED state
 
