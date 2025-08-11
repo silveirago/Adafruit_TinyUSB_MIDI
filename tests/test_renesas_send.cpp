@@ -1,9 +1,10 @@
 #include "Adafruit_TinyUSB_MIDI.h"
+#include <USBMIDI.h>
 #include <cassert>
 #include <iostream>
 
 int main() {
-  Adafruit_TinyUSB_MIDI midi;
+  Adafruit_TinyUSB_MIDI midi = Adafruit_TinyUSB_MIDI::makeDefault();
   midi.begin();
   midi.sendNoteOn(60, 127, 0);
   auto &inst = midi.getMidiInstance();

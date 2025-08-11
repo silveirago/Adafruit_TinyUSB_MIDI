@@ -1,4 +1,5 @@
 #include "Adafruit_TinyUSB_MIDI.h"
+#include <Adafruit_TinyUSB.h>
 #include <cassert>
 #include <iostream>
 
@@ -10,7 +11,7 @@ void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
 }
 
 int main() {
-  Adafruit_TinyUSB_MIDI midi;
+  Adafruit_TinyUSB_MIDI midi = Adafruit_TinyUSB_MIDI::makeDefault();
   midi.begin();
   midi.sendNoteOn(0x3C, 0x7F, 0);
   auto &inst = midi.getMidiInstance();
