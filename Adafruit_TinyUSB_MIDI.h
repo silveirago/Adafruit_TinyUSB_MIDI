@@ -90,6 +90,11 @@ private:
     void (*handleTuneRequest)();
     void (*handleRealTime)(uint8_t realTimeType);
 
+    // Buffer for assembling SysEx messages
+    uint8_t _sysexBuffer[256];
+    size_t _sysexLength;
+    bool _inSysEx;
+
     // Function to parse incoming MIDI data
     void parseMessage(uint8_t *data, size_t length);
 };
