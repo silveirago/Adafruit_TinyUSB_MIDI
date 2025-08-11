@@ -273,7 +273,6 @@ void Adafruit_TinyUSB_MIDI_Input::read() {
 }
 
 // Function to parse incoming MIDI messages
-// Function to parse incoming MIDI messages
 void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
     // If buffer starts with 0xF0, it's a full SysEx message
     if (data[0] == 0xF0) {
