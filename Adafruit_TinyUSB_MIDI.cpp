@@ -1,17 +1,33 @@
 // Adafruit TinyUSB MIDI implementation
-#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4)
+#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI) || defined(ARDUINO_NANO_R4) || defined(ADAFRUIT_TINYUSB_MIDI_RENESAS)
 #include <USBMIDI.h>
 #else
 #include <Adafruit_TinyUSB.h>
 #endif
 #include "Adafruit_TinyUSB_MIDI.h"
 
-// Initialize the global MIDI instance
-Adafruit_TinyUSB_MIDI MIDI;
+// Helper factory that chooses an available transport at runtime.
+static TinyUSBMIDI_Device &selectTransport(uint8_t n_cables) {
+#ifdef ADAFRUIT_TINYUSB_MIDI_RENESAS
+    (void)n_cables;
+    static TinyUSBMIDI_Device transport;  // Renesas USBMIDI doesn't take cable count
+#else
+    static TinyUSBMIDI_Device transport(n_cables);
+#endif
+    return transport;
+}
+
+Adafruit_TinyUSB_MIDI Adafruit_TinyUSB_MIDI::makeDefault(uint8_t n_cables) {
+    return Adafruit_TinyUSB_MIDI(selectTransport(n_cables));
+}
+
+// Initialize the global MIDI instance using the factory
+Adafruit_TinyUSB_MIDI MIDI = Adafruit_TinyUSB_MIDI::makeDefault();
+
+Adafruit_TinyUSB_MIDI::Adafruit_TinyUSB_MIDI(TinyUSBMIDI_Device &transport)
+    : _midi(transport) {}
 
 #ifdef ADAFRUIT_TINYUSB_MIDI_RENESAS
-
-Adafruit_TinyUSB_MIDI::Adafruit_TinyUSB_MIDI(uint8_t n_cables) : _midi() {}
 
 bool Adafruit_TinyUSB_MIDI::begin() {
     _midi.begin();
@@ -75,8 +91,6 @@ void Adafruit_TinyUSB_MIDI::sendRealTime(uint8_t realTimeType) {
 }
 
 #else
-
-Adafruit_TinyUSB_MIDI::Adafruit_TinyUSB_MIDI(uint8_t n_cables) : _midi(n_cables) {}
 
 bool Adafruit_TinyUSB_MIDI::begin() {
     return _midi.begin();
