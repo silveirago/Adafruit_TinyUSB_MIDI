@@ -75,6 +75,19 @@ Adafruit_TinyUSB_MIDI MIDI = Adafruit_TinyUSB_MIDI::makeDefault();
       - macOS/Linux: `~/Documents/Arduino/libraries/`
 4. **Restart the Arduino IDE**: Restart your Arduino IDE to recognize the new library.
 
+## Building with g++
+
+This library depends on the [Adafruit TinyUSB Library](https://github.com/adafruit/Adafruit_TinyUSB_Arduino)
+for the `Adafruit_TinyUSB.h` core.  If you want to build the code on a host using `g++`,
+clone the TinyUSB library and add its `src` directory to your include path.  One way is to
+set the `CPLUS_INCLUDE_PATH` environment variable before compiling:
+
+```bash
+git clone https://github.com/adafruit/Adafruit_TinyUSB_Arduino.git
+export CPLUS_INCLUDE_PATH="$(pwd)/Adafruit_TinyUSB_Arduino/src:$CPLUS_INCLUDE_PATH"
+g++ -std=c++17 -c Adafruit_TinyUSB_MIDI.cpp
+```
+
 ## Using with UNO R4 / Minima / Nano R4
 
 The Renesas-based UNO R4 family ships with its own USBMIDI implementation.  Install the

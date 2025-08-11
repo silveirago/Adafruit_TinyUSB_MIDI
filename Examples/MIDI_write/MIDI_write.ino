@@ -35,15 +35,9 @@ void loop() {
     delay(delayTime);
   }
 
-  // Send Channel Pressure messages
+  // Send Aftertouch (Channel Pressure) messages
   for (int i = 0; i < 128; i++) {
-    MIDI.sendChannelPressure(i, 1);  // pressure value, channel
-    delay(delayTime);
-  }
-
-  // Send Aftertouch messages
-  for (int i = 36; i < 48; i++) {
-    MIDI.sendAfterTouch(i, 64, 1);  // note, pressure, channel
+    MIDI.sendAfterTouch(i, 1);  // pressure value, channel
     delay(delayTime);
   }
 
