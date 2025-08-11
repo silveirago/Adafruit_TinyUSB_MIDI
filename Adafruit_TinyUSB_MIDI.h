@@ -1,12 +1,12 @@
 #ifndef ADAFRUIT_TINYUSB_MIDI_H
 #define ADAFRUIT_TINYUSB_MIDI_H
 
-#include <Adafruit_TinyUSB.h>
+#include "IMIDITransport.h"
 
 // MIDI class definition for sending MIDI messages
 class Adafruit_TinyUSB_MIDI {
 public:
-    Adafruit_TinyUSB_MIDI(uint8_t n_cables = 1);  // Constructor
+    Adafruit_TinyUSB_MIDI(IMIDITransport &transport);  // Constructor
 
     bool begin();  // Initialize MIDI interface
 
@@ -28,10 +28,10 @@ public:
     void sendTuneRequest();
     void sendRealTime(uint8_t realTimeType);
 
-    Adafruit_USBD_MIDI& getMidiInstance();  // Expose MIDI instance for input handling
+    IMIDITransport& getTransport();  // Expose transport for input handling
 
 private:
-    Adafruit_USBD_MIDI _midi;
+    IMIDITransport &_transport;
 };
 
 extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance
@@ -40,7 +40,7 @@ extern Adafruit_TinyUSB_MIDI MIDI;  // Global MIDI instance
 class Adafruit_TinyUSB_MIDI_Input {
 public:
     // Constructor
-    Adafruit_TinyUSB_MIDI_Input(Adafruit_USBD_MIDI &midiInstance);
+    Adafruit_TinyUSB_MIDI_Input(IMIDITransport &transport);
 
     // Functions to set callback functions
     void setHandleNoteOn(void (*fptr)(uint8_t channel, uint8_t note, uint8_t velocity));
@@ -62,8 +62,8 @@ public:
     void read();
 
 private:
-    // Reference to MIDI instance
-    Adafruit_USBD_MIDI &_midi;
+    // Reference to MIDI transport
+    IMIDITransport &_transport;
 
     // Callback function pointers
     void (*handleNoteOn)(uint8_t channel, uint8_t note, uint8_t velocity);

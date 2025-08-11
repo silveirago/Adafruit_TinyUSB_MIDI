@@ -1,7 +1,5 @@
 #include <Adafruit_TinyUSB_MIDI.h>
 
-Adafruit_TinyUSB_MIDI MIDI;
-
 int delayTime = 30;
 
 void setup() {
