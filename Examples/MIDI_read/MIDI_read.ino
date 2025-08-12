@@ -1,5 +1,6 @@
 #include <Adafruit_TinyUSB_MIDI.h>
 
+// MIDI channels are zero-indexed: channel 0 is MIDI channel 1.
 // Global instance for MIDI Input
 Adafruit_TinyUSB_MIDI_Input MIDI_Input(MIDI.getMidiInstance());
 
