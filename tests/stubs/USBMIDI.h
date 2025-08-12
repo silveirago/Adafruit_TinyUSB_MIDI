@@ -23,7 +23,7 @@ public:
   void sendPitchBend(int16_t bendValue, uint8_t channel) {
     sent.push_back({static_cast<uint8_t>(0xE0 | (channel & 0x0F)), static_cast<uint8_t>(bendValue & 0x7F), static_cast<uint8_t>((bendValue >> 7) & 0x7F)});
   }
-  void sendSysEx(uint8_t *data, size_t length) {}
+  void sendSysEx(const uint8_t *data, size_t length) {}
   void sendChannelPressure(uint8_t pressure, uint8_t channel) {
     sent.push_back({static_cast<uint8_t>(0xD0 | (channel & 0x0F)), pressure, 0});
   }

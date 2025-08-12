@@ -25,7 +25,7 @@ public:
     void sendControlChange(uint8_t controlNumber, uint8_t controlValue, uint8_t channel);
     void sendProgramChange(uint8_t programNumber, uint8_t channel);
     void sendPitchBend(int16_t bendValue, uint8_t channel);
-    void sendSysEx(size_t length, uint8_t *data);
+    void sendSysEx(size_t length, const uint8_t *data);
     void sendAfterTouch(uint8_t pressure, uint8_t channel);
     void sendPolyPressure(uint8_t note, uint8_t pressure, uint8_t channel);
     void sendTimeCodeQuarterFrame(uint8_t typeNibble, uint8_t valuesNibble);
@@ -53,7 +53,6 @@ public:
     void setHandleProgramChange(void (*fptr)(uint8_t channel, uint8_t programNumber));
     void setHandlePitchBend(void (*fptr)(uint8_t channel, int16_t bendValue));
     void setHandleChannelPressure(void (*fptr)(uint8_t channel, uint8_t pressure));
-    void setHandleAfterTouch(void (*fptr)(uint8_t channel, uint8_t note, uint8_t pressure));
     void setHandlePolyPressure(void (*fptr)(uint8_t channel, uint8_t note, uint8_t pressure));
     void setHandleSysEx(void (*fptr)(size_t length, uint8_t *data));
     void setHandleTimeCodeQuarterFrame(void (*fptr)(uint8_t typeNibble, uint8_t valuesNibble));
@@ -72,7 +71,6 @@ private:
     void (*handleProgramChange)(uint8_t, uint8_t);
     void (*handlePitchBend)(uint8_t, int16_t);
     void (*handleChannelPressure)(uint8_t, uint8_t);
-    void (*handleAfterTouch)(uint8_t, uint8_t, uint8_t);
     void (*handlePolyPressure)(uint8_t, uint8_t, uint8_t);
     void (*handleSysEx)(size_t, uint8_t *);
     void (*handleTimeCodeQuarterFrame)(uint8_t, uint8_t);

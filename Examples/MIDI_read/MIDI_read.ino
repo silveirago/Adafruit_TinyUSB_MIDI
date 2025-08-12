@@ -1,5 +1,6 @@
 #include <Adafruit_TinyUSB_MIDI.h>
 
+// MIDI channels are zero-indexed: channel 0 is MIDI channel 1.
 // Global instance for MIDI Input
 Adafruit_TinyUSB_MIDI_Input MIDI_Input(MIDI.getMidiInstance());
 
@@ -19,7 +20,6 @@ void setup() {
   MIDI_Input.setHandleProgramChange(handleProgramChange);
   MIDI_Input.setHandlePitchBend(handlePitchBend);
   MIDI_Input.setHandleChannelPressure(handleChannelPressure);
-  MIDI_Input.setHandleAfterTouch(handleAfterTouch);
   MIDI_Input.setHandlePolyPressure(handlePolyPressure);
   MIDI_Input.setHandleSysEx(handleSysEx);
   MIDI_Input.setHandleTimeCodeQuarterFrame(handleTimeCodeQuarterFrame);
@@ -123,20 +123,6 @@ void handlePolyPressure(uint8_t channel, uint8_t note, uint8_t pressure) {
   // Toggle LED state
   toggleLED();
 }
-
-// Callback function for handling Aftertouch messages
-void handleAfterTouch(uint8_t channel, uint8_t note, uint8_t pressure) {
-  Serial.print("Aftertouch received. Channel: ");
-  Serial.print(channel);
-  Serial.print(", Note: ");
-  Serial.print(note);
-  Serial.print(", Pressure: ");
-  Serial.println(pressure);
-
-  // Toggle LED state
-  toggleLED();
-}
-
 
 // Callback function for handling System Exclusive (SysEx) messages
 void handleSysEx(size_t length, uint8_t *data) {

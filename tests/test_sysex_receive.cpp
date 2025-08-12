@@ -13,7 +13,7 @@ void onSysEx(size_t len, uint8_t *data) {
 }
 
 int main() {
-  Adafruit_TinyUSB_MIDI midi = Adafruit_TinyUSB_MIDI::makeDefault();
+  auto midi = Adafruit_TinyUSB_MIDI::makeDefault();
   midi.begin();
   auto &inst = midi.getMidiInstance();
 
@@ -28,7 +28,7 @@ int main() {
   input.read();
 
   assert(sysexLen == 7);
-  uint8_t expected[7] = {0xF0,0x01,0x02,0x03,0x04,0x05,0xF7};
+  uint8_t expected[7] = {0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0xF7};
   assert(std::memcmp(sysexData, expected, 7) == 0);
   std::cout << "SysEx receive test passed" << std::endl;
   return 0;
