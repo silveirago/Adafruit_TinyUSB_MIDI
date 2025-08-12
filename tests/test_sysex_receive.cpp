@@ -1,4 +1,5 @@
 #include "Adafruit_TinyUSB_MIDI.h"
+#include <Adafruit_TinyUSB.h>
 #include <cassert>
 #include <cstring>
 #include <iostream>
@@ -12,7 +13,7 @@ void onSysEx(size_t len, uint8_t *data) {
 }
 
 int main() {
-  Adafruit_TinyUSB_MIDI midi;
+  auto midi = Adafruit_TinyUSB_MIDI::makeDefault();
   midi.begin();
   auto &inst = midi.getMidiInstance();
 
