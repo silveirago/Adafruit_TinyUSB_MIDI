@@ -210,7 +210,7 @@ void Adafruit_TinyUSB_MIDI_Input::parseMessage(uint8_t *data, size_t length) {
 
     for (size_t i = 1; i < 4; ++i) {
         uint8_t b = data[i];
-        if (b == 0) continue;
+        if (b == 0 && !_inSysEx) continue;
 
         if (b >= 0xF8) { if (handleRealTime) handleRealTime(b); continue; }
 
