@@ -58,7 +58,7 @@ void Adafruit_TinyUSB_MIDI::sendPitchBend(int16_t bendValue, uint8_t channel) {
     _midi.sendPitchBend(bendValue, channel);
 }
 
-void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
+void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, const uint8_t *data) {
     _midi.sendSysEx(data, length);
 }
 
@@ -127,7 +127,7 @@ void Adafruit_TinyUSB_MIDI::sendPitchBend(int16_t bendValue, uint8_t channel) {
     _midi.writePacket(packet);
 }
 
-void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, uint8_t *data) {
+void Adafruit_TinyUSB_MIDI::sendSysEx(size_t length, const uint8_t *data) {
     _midi.write(data, length);
 }
 

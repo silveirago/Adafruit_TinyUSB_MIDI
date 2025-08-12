@@ -48,7 +48,7 @@ void loop() {
   }
 
   // Send SysEx messages
-  uint8_t sysexData[3] = {0x7E, 0x7F, 0x09};  // Example SysEx data
+  const uint8_t sysexData[3] = {0x7E, 0x7F, 0x09};  // Example SysEx data
   MIDI.sendSysEx(3, sysexData);
   delay(delayTime);
 
