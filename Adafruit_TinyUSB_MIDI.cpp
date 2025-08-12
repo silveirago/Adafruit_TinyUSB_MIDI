@@ -175,7 +175,7 @@ Adafruit_TinyUSB_MIDI_Input::Adafruit_TinyUSB_MIDI_Input(TinyUSBMIDI_Device &mid
       handleNoteOn(nullptr), handleNoteOff(nullptr),
       handleControlChange(nullptr), handleProgramChange(nullptr),
       handlePitchBend(nullptr), handleChannelPressure(nullptr),
-      handleAfterTouch(nullptr), handlePolyPressure(nullptr),
+      handlePolyPressure(nullptr),
       handleSysEx(nullptr), handleTimeCodeQuarterFrame(nullptr),
       handleSongPosition(nullptr), handleSongSelect(nullptr),
       handleTuneRequest(nullptr), handleRealTime(nullptr) {}
@@ -186,7 +186,6 @@ void Adafruit_TinyUSB_MIDI_Input::setHandleControlChange(void (*fptr)(uint8_t, u
 void Adafruit_TinyUSB_MIDI_Input::setHandleProgramChange(void (*fptr)(uint8_t, uint8_t)) { handleProgramChange = fptr; }
 void Adafruit_TinyUSB_MIDI_Input::setHandlePitchBend(void (*fptr)(uint8_t, int16_t)) { handlePitchBend = fptr; }
 void Adafruit_TinyUSB_MIDI_Input::setHandleChannelPressure(void (*fptr)(uint8_t, uint8_t)) { handleChannelPressure = fptr; }
-void Adafruit_TinyUSB_MIDI_Input::setHandleAfterTouch(void (*fptr)(uint8_t, uint8_t, uint8_t)) { handleAfterTouch = fptr; }
 void Adafruit_TinyUSB_MIDI_Input::setHandlePolyPressure(void (*fptr)(uint8_t, uint8_t, uint8_t)) { handlePolyPressure = fptr; }
 void Adafruit_TinyUSB_MIDI_Input::setHandleSysEx(void (*fptr)(size_t, uint8_t *)) { handleSysEx = fptr; }
 void Adafruit_TinyUSB_MIDI_Input::setHandleTimeCodeQuarterFrame(void (*fptr)(uint8_t, uint8_t)) { handleTimeCodeQuarterFrame = fptr; }
