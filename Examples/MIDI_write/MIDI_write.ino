@@ -1,5 +1,6 @@
 #include <Adafruit_TinyUSB_MIDI.h>
 
+// MIDI channels are zero-indexed: channel 0 is MIDI channel 1.
 int delayTime = 30;
 
 void setup() {
@@ -11,39 +12,39 @@ void loop() {
 
   // Send MIDI notes from C2 to B2
   for (int i = 36; i < 48; i++) {
-    MIDI.sendNoteOn(i, 127, 1);  // note, velocity, channel
+    MIDI.sendNoteOn(i, 127, 0);  // note, velocity, channel
     delay(delayTime);
-    MIDI.sendNoteOff(i, 0, 1);  // note, velocity, channel (Note Off)
+    MIDI.sendNoteOff(i, 0, 0);  // note, velocity, channel (Note Off)
     delay(delayTime);
   }
 
   // Send Control Change messages
   for (int i = 1; i < 128; i++) {
-    MIDI.sendControlChange(10, i, 10);  // cc number, cc value, channel
+    MIDI.sendControlChange(10, i, 9);  // cc number, cc value, channel
     delay(50);
   }
 
   // Send Program Change messages
   for (int i = 0; i < 128; i++) {
-    MIDI.sendProgramChange(i, 1);  // program number, channel
+    MIDI.sendProgramChange(i, 0);  // program number, channel
     delay(delayTime);
   }
 
   // Send Pitch Bend messages
   for (int i = -8192; i <= 8191; i += 512) {  // Pitch bend range: -8192 to 8191
-    MIDI.sendPitchBend(i, 1);  // bend value, channel
+    MIDI.sendPitchBend(i, 0);  // bend value, channel
     delay(delayTime);
   }
 
   // Send Aftertouch (Channel Pressure) messages
   for (int i = 0; i < 128; i++) {
-    MIDI.sendAfterTouch(i, 1);  // pressure value, channel
+    MIDI.sendAfterTouch(i, 0);  // pressure value, channel
     delay(delayTime);
   }
 
   // Send Polyphonic Aftertouch messages
   for (int i = 36; i < 48; i++) {
-    MIDI.sendPolyPressure(i, 64, 1);  // note, pressure, channel
+    MIDI.sendPolyPressure(i, 64, 0);  // note, pressure, channel
     delay(delayTime);
   }
 
